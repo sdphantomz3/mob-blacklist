@@ -1,6 +1,10 @@
 <img width="2520" height="360" alt="mob_blacklist_banner" src="https://github.com/user-attachments/assets/133c904f-df02-42df-af67-451f8713cca0" />
 A simple mod that allows you to blacklist/disable mobs from spawning inside your world, directly from chat/commands.
 
+Version Compatability:
+- 26.1.2 Fabric
+- Forge & Fabric support for (26.1.2 + 1.21.x) will be added soon.
+
 ---
 
 | Command                                                      | Description                                                                                                              |
