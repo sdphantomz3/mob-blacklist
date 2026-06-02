@@ -5,11 +5,10 @@ import com.drypted.mobblacklist.config.BlacklistConfig;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.IdentifierArgument;
+import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.permissions.Permissions;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.core.registries.BuiltInRegistries;
 import java.util.ArrayList;
@@ -22,14 +21,14 @@ public class BlacklistCommands {
     public static void register() {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(Commands.literal("mob_blacklist")
-                .requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_MODERATOR))
+                .requires(source -> source.hasPermission(2))
 
                 .then(Commands.literal("add")
-                    .then(Commands.argument("mob", IdentifierArgument.id())
+                    .then(Commands.argument("mob", ResourceLocationArgument.id())
                         .executes(BlacklistCommands::executeAddMob)))
 
                 .then(Commands.literal("remove")
-                    .then(Commands.argument("mob", IdentifierArgument.id())
+                    .then(Commands.argument("mob", ResourceLocationArgument.id())
                         .executes(BlacklistCommands::executeRemoveMob)))
 
                 .then(Commands.literal("list")
@@ -45,7 +44,7 @@ public class BlacklistCommands {
 
                 .then(Commands.literal("clear_world")
                     .executes(BlacklistCommands::executeClearAllBlacklisted)
-                    .then(Commands.argument("mob", IdentifierArgument.id())
+                    .then(Commands.argument("mob", ResourceLocationArgument.id())
                         .executes(BlacklistCommands::executeClearSpecificMob)))
 
                 .then(Commands.literal("settings")
@@ -57,7 +56,7 @@ public class BlacklistCommands {
     }
 
     private static int executeAddMob(CommandContext<CommandSourceStack> context) {
-        Identifier mobId = IdentifierArgument.getId(context, "mob");
+        ResourceLocation mobId = ResourceLocationArgument.getId(context, "mob");
         String idString = mobId.toString();
 
         if (BlacklistConfig.INSTANCE.blacklistedMobs.add(idString)) {
@@ -70,7 +69,7 @@ public class BlacklistCommands {
     }
 
     private static int executeRemoveMob(CommandContext<CommandSourceStack> context) {
-        Identifier mobId = IdentifierArgument.getId(context, "mob");
+        ResourceLocation mobId = ResourceLocationArgument.getId(context, "mob");
         String idString = mobId.toString();
 
         if (BlacklistConfig.INSTANCE.blacklistedMobs.remove(idString)) {
@@ -139,7 +138,7 @@ public class BlacklistCommands {
     }
 
     private static int executeClearSpecificMob(CommandContext<CommandSourceStack> context) {
-        Identifier mobId = IdentifierArgument.getId(context, "mob");
+        ResourceLocation mobId = ResourceLocationArgument.getId(context, "mob");
         String idString = mobId.toString();
 
         if (!BlacklistConfig.INSTANCE.blacklistedMobs.contains(idString)) {

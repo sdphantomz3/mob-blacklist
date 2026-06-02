@@ -1,12 +1,11 @@
 package com.drypted.mobblacklist.event;
 
 import com.drypted.mobblacklist.config.BlacklistConfig;
-
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -44,7 +43,7 @@ public class SpawnHandler {
         ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
             if (world.isClientSide() || !(entity instanceof LivingEntity)) return;
 
-            Identifier loc = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
+            ResourceLocation loc = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
             String id = loc.toString();
 
             if (BlacklistConfig.INSTANCE.isEnabled && BlacklistConfig.INSTANCE.blacklistedMobs.contains(id)) {
