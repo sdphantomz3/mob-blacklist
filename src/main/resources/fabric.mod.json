@@ -3,13 +3,13 @@
 	"id": "mob-blacklist",
 	"version": "${version}",
 	"name": "Mob Blacklist",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Blacklist mobs from spawning directly from chat.",
 	"authors": [
-		"Me!"
+		"Drypted!"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "",
+		"sources": "https://github.com/sdphantomz3/mob-blacklist"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/mob-blacklist/icon.png",
