@@ -6,6 +6,9 @@ Version Compatability:
 - 26.1.2 Fabric
 - Forge & Fabric support for (26.1.2 + 1.21.x) will be added soon.
 
+Requires:
+- Fabric API
+
 ---
 
 | Command                                                      | Description                                                                                                              |
