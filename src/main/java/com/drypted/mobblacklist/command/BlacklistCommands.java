@@ -1,8 +1,7 @@
 package com.drypted.mobblacklist.command;
 
-import com.drypted.mobblacklist.config.BlacklistConfig;
-
 import com.mojang.brigadier.context.CommandContext;
+import com.drypted.mobblacklist.config.BlacklistConfig;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -12,8 +11,11 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.permissions.Permissions;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.core.registries.BuiltInRegistries;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.Map;
 
 public class BlacklistCommands {
 
@@ -36,13 +38,11 @@ public class BlacklistCommands {
                 .then(Commands.literal("toggle")
                     .executes(BlacklistCommands::executeToggleBlacklist))
 
-                // /mob_blacklist logs OR /mob_blacklist logs reset
                 .then(Commands.literal("logs")
                     .executes(BlacklistCommands::executeShowLogs)
                     .then(Commands.literal("reset")
                         .executes(BlacklistCommands::executeResetLogs)))
 
-                // /mob_blacklist clear_world OR /mob_blacklist clear_world <mob_id>
                 .then(Commands.literal("clear_world")
                     .executes(BlacklistCommands::executeClearAllBlacklisted)
                     .then(Commands.argument("mob", IdentifierArgument.id())
@@ -83,7 +83,7 @@ public class BlacklistCommands {
     }
 
     private static int executeListMobs(CommandContext<CommandSourceStack> context) {
-        var mobs = BlacklistConfig.INSTANCE.blacklistedMobs;
+        Set<String> mobs = BlacklistConfig.INSTANCE.blacklistedMobs;
         if (mobs.isEmpty()) {
             context.getSource().sendSuccess(() -> Component.literal("§eThe blacklist is currently empty."), false);
         } else {
@@ -101,7 +101,7 @@ public class BlacklistCommands {
     }
 
     private static int executeShowLogs(CommandContext<CommandSourceStack> context) {
-        var counts = BlacklistConfig.INSTANCE.preventedCounts;
+        Map<String, Integer> counts = BlacklistConfig.INSTANCE.preventedCounts;
         if (counts.isEmpty()) {
             context.getSource().sendSuccess(() -> Component.literal("§eNo spawn prevention logs recorded yet."), false);
         } else {
@@ -122,11 +122,10 @@ public class BlacklistCommands {
 
     private static int executeClearAllBlacklisted(CommandContext<CommandSourceStack> context) {
         int count = 0;
-        // Search loaded chunks across ALL dimensions (Overworld, Nether, End, etc.)
-        for (ServerLevel level : context.getSource().getServer().getAllLevels()) {
+        for (ServerLevel world : context.getSource().getServer().getAllLevels()) {
             List<Entity> toRemove = new ArrayList<>();
-            for (Entity entity : level.getAllEntities()) {
-                String id = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString();
+            for (Entity entity : world.getAllEntities()) {
+                String id = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString();
                 if (BlacklistConfig.INSTANCE.blacklistedMobs.contains(id)) {
                     toRemove.add(entity);
                 }
@@ -149,10 +148,10 @@ public class BlacklistCommands {
         }
 
         int count = 0;
-        for (ServerLevel level : context.getSource().getServer().getAllLevels()) {
+        for (ServerLevel world : context.getSource().getServer().getAllLevels()) {
             List<Entity> toRemove = new ArrayList<>();
-            for (Entity entity : level.getAllEntities()) {
-                String id = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString();
+            for (Entity entity : world.getAllEntities()) {
+                String id = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString();
                 if (id.equals(idString)) {
                     toRemove.add(entity);
                 }

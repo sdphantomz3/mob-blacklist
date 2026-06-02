@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.storage.LevelResource;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -23,7 +24,6 @@ public class BlacklistConfig {
 
     public static BlacklistConfig INSTANCE = new BlacklistConfig();
 
-    // Setup the path directly inside the active world save folder
     public static void load(MinecraftServer server) {
         File worldDir = server.getWorldPath(LevelResource.ROOT).toFile();
         configFile = new File(worldDir, "mob_blacklist.json");
@@ -37,7 +37,7 @@ public class BlacklistConfig {
                 e.printStackTrace();
             }
         } else {
-            INSTANCE = new BlacklistConfig(); // Reset to defaults for a brand new world
+            INSTANCE = new BlacklistConfig();
             save();
         }
     }

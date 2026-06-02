@@ -33,7 +33,7 @@ public class SpawnHandler {
                         lastAllowedCreativeMob = entityType;
                         return InteractionResult.PASS;
                     } else {
-                        player.sendOverlayMessage(Component.literal("§cThat mob is disabled from spawning!"));
+                        player.displayClientMessage(Component.literal("§cThat mob is disabled from spawning!"), true);
                         return InteractionResult.FAIL;
                     }
                 }
@@ -56,11 +56,9 @@ public class SpawnHandler {
 
                 entity.discard();
                 
-                // Track counts maps on an individual basis
                 int currentCount = BlacklistConfig.INSTANCE.preventedCounts.getOrDefault(id, 0) + 1;
                 BlacklistConfig.INSTANCE.preventedCounts.put(id, currentCount);
 
-                // Auto-save every 10 blocks for this specific mob type to save CPU performance
                 if (currentCount % 10 == 0) {
                     BlacklistConfig.save();
                 }
